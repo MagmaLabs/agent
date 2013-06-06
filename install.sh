@@ -1,6 +1,7 @@
 #!/bin/bash
 
-aptitude install supervisor python-pip python-gevent python-docopt python-requests
+aptitude install supervisor python-pip python-gevent python-requests
+pip install docopt
 
 DIR=$( cd "$( dirname "$0" )" && pwd )
 
