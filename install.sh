@@ -7,10 +7,10 @@ DIR=$( cd "$( dirname "$0" )" && pwd )
 
 if [ ! -f $DIR/agent.conf ]; then
 	cat > $DIR/agent.conf << EOF
-	[appbus]
-	api_host=api-dev.appbus.io
-	api_key=APIKEYHERE
-	EOF
+[appbus]
+api_host=api-dev.appbus.io
+api_key=APIKEYHERE
+EOF
 fi
 
 cat > /etc/supervisor/conf.d/appbus-agent.conf << EOF
