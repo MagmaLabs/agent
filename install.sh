@@ -23,6 +23,6 @@ EOF
 chmod o-rwx $DIR/agent.conf
 
 echo 
-echo 'Ready, just edit $DIR/agent.conf and set up your api key.'
+echo 'Ready, just edit agent.conf and set up your api key.'
 echo
 echo 'To start the agent: supervisorctl reload; supervisorctl restart appbusagent'
