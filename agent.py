@@ -47,6 +47,6 @@ def pusher():
 		r = requests.put( push_url, data=data )
 		if r.status_code != 200:
 			print r.content
-		gevent.sleep( 60 )
+		gevent.sleep( 60*60 )
 
 gevent.joinall( [gevent.spawn(pusher)] )
