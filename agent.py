@@ -31,7 +31,7 @@ def get_software_updates( ):
 	check_script = '/usr/lib/update-notifier/apt-check'
 	
 	try:
-		output = subprocess.check_output( check_script )
+		output = subprocess.check_output( check_script, stderr=subprocess.STDIN )
 	except subprocess.CalledProcessError:
 		total, security = 0, 0
 	except OSError:
