@@ -16,6 +16,7 @@ import requests
 import gevent
 import json
 import subprocess
+import psutil
 
 arguments = docopt( __doc__, version='Agent 0.1' )
 
@@ -25,7 +26,8 @@ config.read( arguments['<config-file>'] )
 api_host = config.get( 'appbus', 'api_host' )
 api_key = config.get( 'appbus', 'api_key' )
 
-push_url = 'http://%s/api/v0/server/software-updates/' % (api_host,)
+updates_push_url = 'http://%s/api/v0/server/software-updates/' % (api_host,)
+metrics_push_url = 'http://%s/api/v0/server/metrics/' % (api_host,)
 
 def get_software_updates( ):
 	check_script = '/usr/lib/update-notifier/apt-check'
@@ -41,12 +43,34 @@ def get_software_updates( ):
 	
 	return { 'total': total, 'security': security }
 
-def pusher():
+def software_updates_pusher():
 	while True:
 		data = json.dumps( {'server_api_key': api_key, 'updates': get_software_updates()} )
-		r = requests.put( push_url, data=data )
+		r = requests.put( updates_push_url, data=data )
 		if r.status_code != 200:
 			print r.content
 		gevent.sleep( 60*60 )
 
-gevent.joinall( [gevent.spawn(pusher)] )
+def get_system_metrics( ):
+	cpu_percent = psutil.cpu_percent( interval=None )
+	memory_percent = psutil.virtual_memory( ).percent
+	disk_percent = psutil.disk_usage('/').percent
+	
+	return {
+		'cpu': cpu_percent,
+		'memory': memory_percent,
+		'disk': disk_percent,
+	}
+
+def metrics_pusher():
+	get_system_metrics( )
+	
+	while True:
+		gevent.sleep( 5*60 )
+		
+		data = json.dumps( {'server_api_key': api_key, 'metrics': get_system_metrics()} )
+		r = requests.put( metrics_push_url, data=data )
+		if r.status_code != 200:
+			print r.content
+
+gevent.joinall( [gevent.spawn(software_updates_pusher), gevent.spawn(metrics_pusher)] )

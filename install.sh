@@ -1,7 +1,11 @@
 #!/bin/bash
 
+# api deps
 aptitude install supervisor python-pip python-gevent python-requests
 pip install docopt
+
+# metrics deps
+aptitude install python-psutil
 
 DIR=$( cd "$( dirname "$0" )" && pwd )
 
