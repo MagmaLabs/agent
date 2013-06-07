@@ -5,7 +5,8 @@ aptitude install supervisor python-pip python-gevent python-requests
 pip install docopt
 
 # metrics deps
-aptitude install python-psutil
+#aptitude install python-psutil
+pip install psutil
 
 DIR=$( cd "$( dirname "$0" )" && pwd )
 
