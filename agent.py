@@ -17,6 +17,7 @@ import gevent
 import json
 import subprocess
 import psutil
+import time
 
 arguments = docopt( __doc__, version='Agent 0.1' )
 
@@ -28,6 +29,19 @@ api_key = config.get( 'appbus', 'api_key' )
 
 updates_push_url = 'http://%s/api/v0/server/software-updates/' % (api_host,)
 metrics_push_url = 'http://%s/api/v0/server/metrics/' % (api_host,)
+
+def push( push_url, _data ):
+	data = {}
+	data.update( _data )
+	data['ts'] = time.time()
+	data['server_api_key'] = api_key
+	
+	while True:
+		try:
+			return requests.put( push_url, data=json.dumps(data) )
+		except requests.ConnectionError:
+			print 'Could not push to', push_url, ' - retrying...'
+			gevent.sleep( 60 )
 
 def get_software_updates( ):
 	check_script = '/usr/lib/update-notifier/apt-check'
@@ -45,8 +59,8 @@ def get_software_updates( ):
 
 def software_updates_pusher():
 	while True:
-		data = json.dumps( {'server_api_key': api_key, 'updates': get_software_updates()} )
-		r = requests.put( updates_push_url, data=data )
+		data = {'updates': get_software_updates()}
+		r = push( updates_push_url, data )
 		if r.status_code != 200:
 			print r.content
 		gevent.sleep( 60*60 )
@@ -68,8 +82,8 @@ def metrics_pusher():
 	while True:
 		gevent.sleep( 5*60 )
 		
-		data = json.dumps( {'server_api_key': api_key, 'metrics': get_system_metrics()} )
-		r = requests.put( metrics_push_url, data=data )
+		data = {'metrics': get_system_metrics()}
+		r = push( metrics_push_url, data )
 		if r.status_code != 200:
 			print r.content
 
