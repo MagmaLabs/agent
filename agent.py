@@ -79,7 +79,12 @@ def get_system_metrics( ):
 def metrics_pusher():
 	get_system_metrics( )
 	
+	GRAB_FREQUENCE = (5*60)
+	
 	while True:
+		next_grab = time.time( ) + ( 5*60 )
+		
+		
 		gevent.sleep( 5*60 )
 		
 		data = {'metrics': get_system_metrics()}
