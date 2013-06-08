@@ -79,13 +79,16 @@ def get_system_metrics( ):
 def metrics_pusher():
 	get_system_metrics( )
 	
-	GRAB_FREQUENCE = (5*60)
+	GRAB_FREQUENCY = (5*60)
+	GRAB_POLL_SLEEP = (60)
+	
+	next_grab = time.time( )
 	
 	while True:
-		next_grab = time.time( ) + ( 5*60 )
+		next_grab += GRAB_FREQUENCY
 		
-		
-		gevent.sleep( 5*60 )
+		while time.time() < next_grab:
+			gevent.sleep( GRAB_POLL_SLEEP )
 		
 		data = {'metrics': get_system_metrics()}
 		r = push( metrics_push_url, data )
