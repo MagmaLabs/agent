@@ -10,7 +10,6 @@ Options:
 """
 from docopt import docopt
 
-import ConfigParser
 import sys
 import requests
 import gevent
@@ -19,10 +18,11 @@ import subprocess
 import psutil
 import time
 
+from .conf import AppBusAgentConfig
+
 arguments = docopt( __doc__, version='Agent 0.1' )
 
-config = ConfigParser.ConfigParser()
-config.read( arguments['<config-file>'] )
+config = AppBusAgentConfig( arguments )
 
 api_host = config.get( 'appbus', 'api_host' )
 api_key = config.get( 'appbus', 'api_key' )
