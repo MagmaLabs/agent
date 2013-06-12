@@ -10,4 +10,4 @@ class AppBusAgentConfig(object):
 		return self.config.get( section, name )
 	
 	def get_ipc_socket( self ):
-		return 'ipc://%s' % os.path.join( os.path.dirname(__file__), 'pusher.sock' )
+		return 'ipc://%s' % os.path.join( os.path.dirname(__file__), '../pusher.sock' )
