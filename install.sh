@@ -8,6 +8,8 @@ pip install docopt
 #aptitude install python-psutil
 pip install psutil
 
+mkdir -p /var/log/appbus/
+
 DIR=$( cd "$( dirname "$0" )" && pwd )
 
 if [ ! -f $DIR/agent.conf ]; then
