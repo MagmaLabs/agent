@@ -1,8 +1,10 @@
 #!/bin/bash
 
+aptitude install build-essential
+
 # api deps
 aptitude install supervisor python-pip python-gevent python-requests
-pip install docopt
+pip install docopt pyzmq
 
 # metrics deps
 #aptitude install python-psutil
