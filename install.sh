@@ -1,6 +1,6 @@
 #!/bin/bash
 
-aptitude install build-essential
+aptitude install build-essential python-dev
 
 # api deps
 aptitude install supervisor python-pip python-gevent python-requests
